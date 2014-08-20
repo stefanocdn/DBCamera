@@ -328,9 +328,26 @@ static const CGSize kFilterCellSize = { 75, 90 };
     _selectedFilterIndex = indexPath;
     [self.filtersView reloadData];
     
+    [self scrollToSelectedSegmentIndex:indexPath.row];
+    
     UIImage *filteredImage = [_filterMapping[@(indexPath.row)] imageByFilteringImage:self.sourceImage];
     [self.loadingView removeFromSuperview];
     [self.imageView setImage:filteredImage];
+}
+
+- (void)scrollToSelectedSegmentIndex:(NSInteger)row{
+    CGRect rectForSelectedIndex;
+    CGFloat selectedSegmentOffset = 0;
+    rectForSelectedIndex = CGRectMake(kFilterCellSize.width * row,
+                                      0,
+                                      kFilterCellSize.width,
+                                      kFilterCellSize.height);
+    
+    selectedSegmentOffset = (CGRectGetWidth(self.view.frame) / 2) - (kFilterCellSize.width / 2);
+    CGRect rectToScrollTo = rectForSelectedIndex;
+    rectToScrollTo.origin.x -= selectedSegmentOffset;
+    rectToScrollTo.size.width += selectedSegmentOffset * 2;
+    [self.filtersView scrollRectToVisible:rectToScrollTo animated:YES];
 }
 
 #pragma mark - UIActionSheetDelegate
